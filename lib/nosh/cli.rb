@@ -2,11 +2,11 @@ require "thor"
 
 class Nosh
   class CLI < Thor
-    desc "nosh SOURCE_RELEASE_PATH DESTINATION_RELEASE_PATH", "Runs Nosh"
-    def nosh(source_release_path, destination_release_path)
+    desc "nosh", "Runs Nosh"
+    def nosh
       require "nosh"
 
-      nosh = Nosh.new(source_release_path, destination_release_path)
+      nosh = Nosh.new(Dir.pwd)
       nosh.run
     end
   end

@@ -4,13 +4,11 @@ require "nosh"
 describe Nosh do
   before do
     FileUtils.rm_rf("tmp/generated-boshrelease")
+    FileUtils.cp_r("spec/fixtures/source-boshrelease", "tmp/generated-boshrelease")
   end
 
   it "works" do
-    nosh = Nosh.new(
-      "spec/fixtures/source-boshrelease",
-      "tmp/generated-boshrelease",
-    )
+    nosh = Nosh.new("tmp/generated-boshrelease")
     nosh.run
 
     expect(generated_boshrelease).to eq(expected_boshrelease)
