@@ -3,54 +3,49 @@ require "rspec"
 describe "nosh" do
   before do
     Dir.chdir("..")
-    FileUtils.rm_rf("dummy-boshrelease-next")
     puts Dir.pwd
+
+    FileUtils.rm_rf("generated-boshrelease")
   end
 
   it "works" do
     nosh
 
-    expect(boshrelease_tree).to eq(noshrelease_tree)
+    expect(expected_boshrelease).to eq(generated_boshrelease)
+  end
+
+  def system!(cmd)
+    system(cmd) or raise "Failed to run: `#{cmd}'"
   end
 
   def nosh
-    FileUtils.mkpath("dummy-boshrelease-next/jobs")
-    FileUtils.mkpath("dummy-boshrelease-next/packages")
-    FileUtils.mkpath("dummy-boshrelease-next/src")
+    # initialize the bosh release from source release
+    FileUtils.mkpath("generated-boshrelease")
+    FileUtils.mkpath("generated-boshrelease/jobs")
+    FileUtils.mkpath("generated-boshrelease/packages")
+    FileUtils.mkpath("generated-boshrelease/src")
 
-    jobs = Dir.glob("dummy-noshrelease/*")
-    jobs.each do |jobpath|
-      jobname = File.basename(jobpath)
-      FileUtils.mkpath("dummy-boshrelease-next/jobs/#{jobname}")
-      system("cp -R #{jobpath}/job/ dummy-boshrelease-next/jobs/#{jobname}/")
-    end
+    system!("cp -r source-boshrelease/ generated-boshrelease")
 
-    packages = Dir.glob("dummy-noshrelease/*")
-    packages.each do |jobpath|
-      next unless File.exist?("#{jobpath}/package/")
+    # copy job
+    component_name = "nosh-component"
+    FileUtils.mkpath("generated-boshrelease/jobs/#{component_name}")
+    system!("cp -r #{component_name}/.nosh/job/ generated-boshrelease/jobs/#{component_name}/")
 
-      packagename = File.basename(jobpath)
-      FileUtils.mkpath("dummy-boshrelease-next/jobs/#{packagename}")
-      system("cp -R #{jobpath}/package/ dummy-boshrelease-next/packages/#{packagename}/")
-      FileUtils.mkpath("dummy-boshrelease-next/packages/#{packagename}")
-    end
+    # copy package
+    FileUtils.mkpath("generated-boshrelease/packages/#{component_name}")
+    system!("cp -r #{component_name}/.nosh/package/ generated-boshrelease/packages/#{component_name}/")
 
-    sources = Dir.glob("dummy-noshrelease/*")
-    sources.each do |jobpath|
-      next unless File.exist?("#{jobpath}/src/")
-
-      sourcename = File.basename(jobpath)
-      FileUtils.mkpath("dummy-boshrelease-next/src/#{sourcename}")
-      system("cp -R #{jobpath}/src/ dummy-boshrelease-next/src/#{sourcename}/")
-      FileUtils.mkpath("dummy-boshrelease-next/src/#{File.basename(jobpath)}")
-    end
+    # copy source
+    FileUtils.mkpath("generated-boshrelease/src/#{component_name}")
+    system!("cp -r #{component_name}/ generated-boshrelease/src/#{component_name}/")
   end
 
-  def boshrelease_tree
-    Dir.chdir("dummy-boshrelease") { `tree`}
+  def expected_boshrelease
+    Dir.chdir("expected-boshrelease") { `tree`}
   end
 
-  def noshrelease_tree
-    Dir.chdir("dummy-boshrelease-next") { `tree`}
+  def generated_boshrelease
+    Dir.chdir("generated-boshrelease") { `tree`}
   end
 end
