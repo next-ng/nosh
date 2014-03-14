@@ -26,21 +26,31 @@ describe "nosh" do
     end
 
     packages = Dir.glob("dummy-noshrelease/*")
-    packages.each do |package|
-      FileUtils.mkpath("dummy-boshrelease-next/packages/#{File.basename(package)}")
+    packages.each do |jobpath|
+      next unless File.exist?("#{jobpath}/package/")
+
+      packagename = File.basename(jobpath)
+      FileUtils.mkpath("dummy-boshrelease-next/jobs/#{packagename}")
+      system("cp -R #{jobpath}/package/ dummy-boshrelease-next/packages/#{packagename}/")
+      FileUtils.mkpath("dummy-boshrelease-next/packages/#{packagename}")
     end
 
     sources = Dir.glob("dummy-noshrelease/*")
-    sources.each do |source|
-      FileUtils.mkpath("dummy-boshrelease-next/src/#{File.basename(source)}")
+    sources.each do |jobpath|
+      next unless File.exist?("#{jobpath}/src/")
+
+      sourcename = File.basename(jobpath)
+      FileUtils.mkpath("dummy-boshrelease-next/src/#{sourcename}")
+      system("cp -R #{jobpath}/src/ dummy-boshrelease-next/src/#{sourcename}/")
+      FileUtils.mkpath("dummy-boshrelease-next/src/#{File.basename(jobpath)}")
     end
   end
 
   def boshrelease_tree
-    `tree dummy-boshrelease`
+    Dir.chdir("dummy-boshrelease") { `tree`}
   end
 
   def noshrelease_tree
-    `tree dummy-boshrelease-next`
+    Dir.chdir("dummy-boshrelease-next") { `tree`}
   end
 end
