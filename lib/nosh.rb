@@ -15,15 +15,11 @@ class Nosh
       processes = Dir.glob("#{component_path}/.nosh/*").map {|path| File.basename(path)}
       processes.each do |process_name|
         if Dir.exist?("#{component_path}/.nosh/#{process_name}/job")
-          # copy job
-          FileUtils.mkpath("#{@release_path}/jobs/#{component_name}-#{process_name}")
-          system!("cp -r #{component_path}/.nosh/#{process_name}/job/ #{@release_path}/jobs/#{component_name}-#{process_name}/")
+          system!("cp -r #{component_path}/.nosh/#{process_name}/job/ #{@release_path}/jobs/#{process_name}")
         end
 
         if Dir.exist?("#{component_path}/.nosh/#{process_name}/package")
-          # copy package
-          FileUtils.mkpath("#{@release_path}/packages/#{component_name}-#{process_name}")
-          system!("cp -r #{component_path}/.nosh/#{process_name}/package/ #{@release_path}/packages/#{component_name}-#{process_name}/")
+          system!("cp -r #{component_path}/.nosh/#{process_name}/package/ #{@release_path}/packages/#{process_name}")
         end
       end
 
