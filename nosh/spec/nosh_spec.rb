@@ -14,8 +14,24 @@ describe "nosh" do
   end
 
   def nosh
-    system("mkdir dummy-boshrelease-next") or raise "mkdir broke"
-    system("cp -R dummy-noshrelease/ dummy-boshrelease-next/") or raise "cp broke"
+    FileUtils.mkpath("dummy-boshrelease-next/jobs")
+    FileUtils.mkpath("dummy-boshrelease-next/packages")
+    FileUtils.mkpath("dummy-boshrelease-next/src")
+
+    jobs = Dir.glob("dummy-noshrelease/*")
+    jobs.each do |job|
+      FileUtils.mkpath("dummy-boshrelease-next/jobs/#{File.basename(job)}")
+    end
+
+    packages = Dir.glob("dummy-noshrelease/*")
+    packages.each do |package|
+      FileUtils.mkpath("dummy-boshrelease-next/packages/#{File.basename(package)}")
+    end
+
+    sources = Dir.glob("dummy-noshrelease/*")
+    sources.each do |source|
+      FileUtils.mkpath("dummy-boshrelease-next/src/#{File.basename(source)}")
+    end
   end
 
   def boshrelease_tree
