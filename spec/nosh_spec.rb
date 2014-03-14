@@ -14,14 +14,14 @@ describe Nosh do
     )
     nosh.run
 
-    expect(expected_boshrelease).to eq(generated_boshrelease)
+    expect(generated_boshrelease).to eq(expected_boshrelease)
   end
 
   def expected_boshrelease
-    Dir.chdir("spec/fixtures/expected-boshrelease") { `tree` }
+    Dir.chdir("spec/fixtures/expected-boshrelease") { `tree -a` }
   end
 
   def generated_boshrelease
-    Dir.chdir("tmp/generated-boshrelease") { `tree` }
+    Dir.chdir("tmp/generated-boshrelease") { `tree -a` }
   end
 end

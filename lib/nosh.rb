@@ -27,7 +27,7 @@ class Nosh
 
     # copy source
     FileUtils.mkpath("#{@dest_release_path}/src/#{@component_name}")
-    system!("cp -r #{@component_path}/ #{@dest_release_path}/src/#{@component_name}/")
+    system!("rsync -a --exclude=\".*\" #{@component_path}/ #{@dest_release_path}/src/#{@component_name}/")
   end
 
   def system!(cmd)
