@@ -15,11 +15,11 @@ class Nosh
       processes = Dir.glob("#{component_path}/.nosh/*").map {|path| File.basename(path)}
       processes.each do |process_name|
         if Dir.exist?("#{component_path}/.nosh/#{process_name}/job")
-          system!("cp -r #{component_path}/.nosh/#{process_name}/job/ #{@release_path}/jobs/#{process_name}")
+          system!("rsync -a --exclude=\".*\"  #{component_path}/.nosh/#{process_name}/job/ #{@release_path}/jobs/#{process_name}")
         end
 
         if Dir.exist?("#{component_path}/.nosh/#{process_name}/package")
-          system!("cp -r #{component_path}/.nosh/#{process_name}/package/ #{@release_path}/packages/#{process_name}")
+          system!("rsync -a --exclude=\".*\"  #{component_path}/.nosh/#{process_name}/package/ #{@release_path}/packages/#{process_name}")
         end
       end
 
