@@ -1,28 +1,33 @@
 class Nosh
+  def initialize(component_path, source_release_path, dest_release_path)
+    @component_name = File.basename(component_path)
+    @component_path = component_path
+    @source_release_path = source_release_path
+    @dest_release_path = dest_release_path
+  end
+
   def run
     # initialize the bosh release from source release
-    FileUtils.mkpath("tmp/generated-boshrelease")
-    FileUtils.mkpath("tmp/generated-boshrelease/jobs")
-    FileUtils.mkpath("tmp/generated-boshrelease/packages")
-    FileUtils.mkpath("tmp/generated-boshrelease/src")
+    FileUtils.mkpath("#{@dest_release_path}/jobs")
+    FileUtils.mkpath("#{@dest_release_path}/packages")
+    FileUtils.mkpath("#{@dest_release_path}/src")
 
-    system!("cp -r spec/fixtures/source-boshrelease/ tmp/generated-boshrelease")
+    system!("cp -r #{@source_release_path}/ #{@dest_release_path}")
 
-    component_name = "nosh-component"
-    processes = Dir.glob("spec/fixtures/#{component_name}/.nosh/*").map {|path| File.basename(path)}
+    processes = Dir.glob("#{@component_path}/.nosh/*").map {|path| File.basename(path)}
     processes.each do |process_name|
       # copy job
-      FileUtils.mkpath("tmp/generated-boshrelease/jobs/#{component_name}-#{process_name}")
-      system!("cp -r spec/fixtures/#{component_name}/.nosh/#{process_name}/job/ tmp/generated-boshrelease/jobs/#{component_name}-#{process_name}/")
+      FileUtils.mkpath("#{@dest_release_path}/jobs/#{@component_name}-#{process_name}")
+      system!("cp -r #{@component_path}/.nosh/#{process_name}/job/ #{@dest_release_path}/jobs/#{@component_name}-#{process_name}/")
 
       # copy package
-      FileUtils.mkpath("tmp/generated-boshrelease/packages/#{component_name}-#{process_name}")
-      system!("cp -r spec/fixtures/#{component_name}/.nosh/#{process_name}/package/ tmp/generated-boshrelease/packages/#{component_name}-#{process_name}/")
+      FileUtils.mkpath("#{@dest_release_path}/packages/#{@component_name}-#{process_name}")
+      system!("cp -r #{@component_path}/.nosh/#{process_name}/package/ #{@dest_release_path}/packages/#{@component_name}-#{process_name}/")
     end
 
     # copy source
-    FileUtils.mkpath("tmp/generated-boshrelease/src/#{component_name}")
-    system!("cp -r spec/fixtures/#{component_name}/ tmp/generated-boshrelease/src/#{component_name}/")
+    FileUtils.mkpath("#{@dest_release_path}/src/#{@component_name}")
+    system!("cp -r #{@component_path}/ #{@dest_release_path}/src/#{@component_name}/")
   end
 
   def system!(cmd)
