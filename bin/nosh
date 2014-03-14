@@ -1,11 +1,4 @@
 #!/usr/bin/env ruby
+require "nosh/cli"
 
-require "nosh"
-
-nosh = Nosh.new(
-  "spec/fixtures/nosh-component",
-  "spec/fixtures/source-boshrelease",
-  "tmp/generated-boshrelease",
-)
-
-nosh.run
+Nosh::CLI.start
