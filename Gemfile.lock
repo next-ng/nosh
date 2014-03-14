@@ -23,7 +23,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler
+  bundler (~> 1.5)
   nosh!
   rake
   rspec
