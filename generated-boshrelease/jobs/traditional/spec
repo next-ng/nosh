@@ -1,6 +1,0 @@
----
-name: dummy
-templates:
-  ctl.erb: bin/dummy_ctl
-
-packages: []

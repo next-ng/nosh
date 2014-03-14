@@ -27,14 +27,17 @@ describe "nosh" do
 
     system!("cp -r source-boshrelease/ generated-boshrelease")
 
-    # copy job
     component_name = "nosh-component"
-    FileUtils.mkpath("generated-boshrelease/jobs/#{component_name}")
-    system!("cp -r #{component_name}/.nosh/job/ generated-boshrelease/jobs/#{component_name}/")
+    processes = Dir.glob("#{component_name}/.nosh/*").map {|path| File.basename(path)}
+    processes.each do |process_name|
+      # copy job
+      FileUtils.mkpath("generated-boshrelease/jobs/#{component_name}-#{process_name}")
+      system!("cp -r #{component_name}/.nosh/#{process_name}/job/ generated-boshrelease/jobs/#{component_name}-#{process_name}/")
 
-    # copy package
-    FileUtils.mkpath("generated-boshrelease/packages/#{component_name}")
-    system!("cp -r #{component_name}/.nosh/package/ generated-boshrelease/packages/#{component_name}/")
+      # copy package
+      FileUtils.mkpath("generated-boshrelease/packages/#{component_name}-#{process_name}")
+      system!("cp -r #{component_name}/.nosh/#{process_name}/package/ generated-boshrelease/packages/#{component_name}-#{process_name}/")
+    end
 
     # copy source
     FileUtils.mkpath("generated-boshrelease/src/#{component_name}")
