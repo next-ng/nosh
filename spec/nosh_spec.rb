@@ -8,7 +8,6 @@ describe Nosh do
 
   it "works" do
     nosh = Nosh.new(
-      "spec/fixtures/nosh-component",
       "spec/fixtures/source-boshrelease",
       "tmp/generated-boshrelease",
     )
