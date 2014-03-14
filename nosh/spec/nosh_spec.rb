@@ -19,8 +19,10 @@ describe "nosh" do
     FileUtils.mkpath("dummy-boshrelease-next/src")
 
     jobs = Dir.glob("dummy-noshrelease/*")
-    jobs.each do |job|
-      FileUtils.mkpath("dummy-boshrelease-next/jobs/#{File.basename(job)}")
+    jobs.each do |jobpath|
+      jobname = File.basename(jobpath)
+      FileUtils.mkpath("dummy-boshrelease-next/jobs/#{jobname}")
+      system("cp -R #{jobpath}/job/ dummy-boshrelease-next/jobs/#{jobname}/")
     end
 
     packages = Dir.glob("dummy-noshrelease/*")
